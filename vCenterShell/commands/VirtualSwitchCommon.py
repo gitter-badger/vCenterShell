@@ -95,3 +95,4 @@ class VirtualSwitchCommandBase(BaseCommand):
 
     def get_virtual_machine(self, service_instance, vm_path, vm_uuid):
         vm = self.pyvmomi_service.find_by_uuid(service_instance, vm_path, vm_uuid)
+        return vm

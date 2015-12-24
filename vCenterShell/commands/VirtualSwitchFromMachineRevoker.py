@@ -38,9 +38,12 @@ class VirtualSwitchFromMachineRevoker(VirtualSwitchCommandBase):
 
         _logger.debug("Revoking ALL Interfaces from VM '{}'".format(vm_name))
 
-        vm = self.pyvmomi_service.find_by_uuid(self.si, virtual_machine_path, vm_uuid)
-        dv_switch_NOTUSED_FOR_NOW = self.pyvmomi_service.find_network_by_name(self.si, dv_switch_path, dv_switch_name)
-        return self.remove_all_interfaces_from_vm(vm)
+        virtual_machine = self.pyvmomi_service.find_by_uuid(self.si, virtual_machine_path, vm_uuid)
+        dv_switch = self.pyvmomi_service.find_network_by_name(self.si, dv_switch_path, dv_switch_name)
+        return self.remove_all_interfaces_from_vm(virtual_machine)
+
+    def destroy_switch(self, virtual_switch):
+        pass
 
     def remove_all_interfaces_from_vm(self, virtual_machine):
         """
