@@ -38,8 +38,9 @@ class CommandExecuterService(object):
         self.virtual_switch_connect_command.connect_vm_to_vlan(vlan_id, vlan_spec_type)
 
     def revoke(self):
-        vlan_id = os.environ.get('VLAN_ID')
-        vlan_spec_type = os.environ.get('VLAN_SPEC_TYPE')
-        self.virtual_switch_revoke_command.revoke_vm_from_vlan(vlan_id, vlan_spec_type)
+        # vlan_id = os.environ.get('VLAN_ID')
+        # vlan_spec_type = os.environ.get('VLAN_SPEC_TYPE')
+        # self.virtual_switch_revoke_command.revoke_vm_from_vlan(vlan_id, vlan_spec_type)
+        self.virtual_switch_revoke_command.revoke_vm_from_vlan()
 
 

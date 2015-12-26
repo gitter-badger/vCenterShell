@@ -8,6 +8,8 @@
 from pyVmomi import vim
 from pycommon.pyVmomiService import *
 
+from models.ServiceProxy import ServiceProxy
+from models.VirtualMachine import VirtualMachine
 from .VirtualSwitchCommon import VirtualSwitchCommandBase
 
 from pycommon.logger import getLogger
@@ -27,34 +29,15 @@ class VirtualSwitchFromMachineRevoker(VirtualSwitchCommandBase):
     def execute(self):
         pass
 
-    def revoke(self,
-            vm_name,
-            vm_uuid,
-            dv_switch_path,
-            dv_switch_name,
-            virtual_machine_path):
+    def revoke(self, vm_name, virtual_machine_path):
         if not self.is_vcenter_connected():
             self.vcenter_connect(self.get_connection_details(vm_name))
 
         _logger.debug("Revoking ALL Interfaces from VM '{}'".format(vm_name))
-
-        vm = self.pyvmomi_service.find_by_uuid(self.si, virtual_machine_path, vm_uuid)
-        dv_switch_NOTUSED_FOR_NOW = self.pyvmomi_service.find_network_by_name(self.si, dv_switch_path, dv_switch_name)
-        return self.remove_all_interfaces_from_vm(vm)
-
-    def remove_all_interfaces_from_vm(self, virtual_machine):
-        """
-        @see https://www.vmware.com/support/developer/vc-sdk/visdk41pubs/ApiReference/vim.VirtualMachine.html#reconfigure
-        :param virtual_machine: <vim.vm object>
-        :return:
-        """
-        device_change = []
-        for device in virtual_machine.config.hardware.device:
-            if isinstance(device, vim.vm.device.VirtualEthernetCard):
-                nicspec = vim.vm.device.VirtualDeviceSpec()
-                device_change.append(nicspec)
-
-        config_spec = vim.vm.ConfigSpec(deviceChange=device_change)
-        task = virtual_machine.ReconfigVM_Task(config_spec)
+        machine = VirtualMachine(ServiceProxy(self.pyvmomi_service, self.si), virtual_machine_path, vm_name, vm_uuid)
+        vm = machine.get_vm()
+        task = VirtualMachine.task_remove_all_interfaces(vm)
         logger.info("Virtual Machine remove ALL Interfaces task STARTED")
         return self.synchronous_task_waiter.wait_for_task(task)
+
+

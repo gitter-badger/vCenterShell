@@ -31,30 +31,16 @@ class VirtualSwitchRevokeCommand(VirtualSwitchCommandBase):
                                                          synchronous_task_waiter)
         self.revoker = revoker
 
-
-    def revoke_vm_from_vlan(self, vlan_id, vlan_spec_type=None):
+    def revoke_vm_from_vlan(self):
         resource_context = helpers.get_resource_context_details()
         inventory_path_data = self.connection_retriever.getVCenterInventoryPathAttributeData(resource_context)
-
-        vm_uuid = resource_context.attributes['UUID']
 
         virtual_machine_path = inventory_path_data.vm_folder
         vm_name = inventory_path_data.vCenter_resource_name
 
-        session = helpers.get_api_session()
-        vcenter_resource_details = session.GetResourceDetails(vm_name)
-
-        dv_switch_path = first_or_default(vcenter_resource_details.ResourceAttributes,
-                                          lambda att: att.Name == 'Default dvSwitch Path').Value
-        dv_switch_name = first_or_default(vcenter_resource_details.ResourceAttributes,
-                                          lambda att: att.Name == 'Default dvSwitch Name').Value
-
-        self.revoker.revoke(vm_name,
-                            vm_uuid,
-                            dv_switch_path,
-                            dv_switch_name,
-                            virtual_machine_path)
-
+        self.revoker.revoke(vm_name, virtual_machine_path)
 
     def execute(self):
-        pass
+        return self.revoke_vm_from_vlan()
+
+

@@ -4,7 +4,7 @@ import os
 
 from datetime import datetime
 from timeit import default_timer as timer
-from pyVmomi import vim
+from pyVmomi import vim as vim
 from pycommon.logger import configure_loglevel
 from pycommon.logger import getLogger
 

@@ -9,7 +9,7 @@ import qualipy.scripts.cloudshell_scripts_helpers as helpers
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '../vCenterShell'))
 from models.VCenterConnectionDetails import *
-from vCenterShell.commands.NetworkAdaptersRetriever import NetworkAdaptersRetrieverCommand, ConnectionException
+from vCenterShell.commands.NetworkAdaptersRetrieverCommand import NetworkAdaptersRetrieverCommand, ConnectionException
 
 
 class TestNetworkAdaptersRetriever(unittest.TestCase):
@@ -33,7 +33,8 @@ class TestNetworkAdaptersRetriever(unittest.TestCase):
         pvService = Mock()
         pvService.connect = Mock(return_value=si)
         pvService.get_obj = Mock(return_value=vmMachine)
-        pvService.find_network_by_name = Mock(return_value=vmMachine)
+        pvService.find_vm_by_name = Mock(return_value=vmMachine)
+        #pvService.find_network_by_name = Mock(return_value=vmMachine)
 
         pvServiceConnectError = Mock()
         pvServiceConnectError.connect = Mock(side_effect=Exception('TEST Exception'))
@@ -75,7 +76,8 @@ class TestNetworkAdaptersRetriever(unittest.TestCase):
 
         pvServiceConnectNone = Mock()
         pvServiceConnectNone.connect = Mock(return_value=si)
-        pvServiceConnectNone.find_network_by_name = Mock(return_value=None)
+        pvServiceConnectNone.find_vm_by_name = Mock(return_value=None)
+        #pvServiceConnectNone.find_network_by_name = Mock(return_value=None)
 
 
         csRetrieverService = Mock()

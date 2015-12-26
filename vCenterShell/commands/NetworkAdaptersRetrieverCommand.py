@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import qualipy.scripts.cloudshell_scripts_helpers as helpers
-from pyVmomi import vim
+from pycommon.pyVmomiService import vim
+
 
 from vCenterShell.commands.BaseCommand import BaseCommand
 from models.VirtualNicModel import VirtualNicModel
@@ -50,7 +51,7 @@ class NetworkAdaptersRetrieverCommand(BaseCommand):
         _logger.debug(u"Successfully log in {}".format(message_details))
 
         _logger.debug(u"Retrieving... Path: '{}' Name: '{}'".format(vcenter_resource_path, vcenter_resource_name))
-        vm_machine = self.pvService.find_network_by_name(si, vcenter_resource_path, vcenter_resource_name)
+        vm_machine = self.pvService.find_vm_by_name(si, vcenter_resource_path, vcenter_resource_name)
 
         result = [VirtualNicModel(x.deviceInfo.summary,
                                   x.macAddress,

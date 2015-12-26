@@ -1,10 +1,9 @@
 ﻿from abc import ABCMeta, abstractmethod
+from pycommon.AbstractObject import AbstractObject
 
 
-class BaseCommand(object):
+class BaseCommand(AbstractObject):
     """base command"""
-
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def execute(self):
